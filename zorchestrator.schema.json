@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "ZOrchestrator",
+    "description": "docker project",
+    "type": "object",
+    "required": [
+        "imageUrl"
+    ],
+    "properties": {
+        "additionalProperties": false,
+        "imageUrl": {
+            "type": "string"
+        },
+        "exposes": {
+            "type": "object",
+            "additionalProperties": false,
+            "patternProperties": {
+                "^\\d+$": {
+                    "$ref": "#/definitions/port"
+                }
+            }
+        },
+        "dependencies": {
+            "type": "object",
+            "patternProperties": {
+                ".*": {
+                    "$ref": "#/definitions/service"
+                }
+            }
+        },
+        "dependsOn": {
+            "$ref": "#/definitions/service/properties/dependsOn"
+        }
+    },
+    "definitions": {
+        "port": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+        },
+        "service": {
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+                "imageUrl": {
+                    "type": "string",
+                    "format": "aaa"
+                },
+                "envFile": {
+                    "type": "string"
+                },
+                "envs": {
+                    "type": "object"
+                },
+                "dependsOn": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "$ref": "#/properties/dependencies/patternProperties"
+                    }
+                }
+            }
+        }
+    }
+}
